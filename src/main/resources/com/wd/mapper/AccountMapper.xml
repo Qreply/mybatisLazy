@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace必须是mapper的全限定类名-->
+<mapper namespace="com.wd.mapper.AccountMapper">
+
+    <!-- 定义封装account和user的resultMap -->
+    <resultMap id="accountUserMap" type="account">
+        <id property="id" column="aid"/>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!-- 一对一的关系映射：配置封装user的内容
+            select属性指定的内容，查询用户的唯一标志
+            column属性指定的内容：用户根据id查询时，所需要的参数的值
+        -->
+        <association property="user" column="uid" javaType="user" select="com.wd.mapper.UserMapper.findById">
+
+        </association>
+    </resultMap>
+
+    <!--配置查询所有-->
+    <!--id属性的取值必须是mapper接口的方法名-->
+    <select id="findAll" resultMap="accountUserMap">
+        select * from account
+    </select>
+
+    <!-- 根据用户id查询账户列表 -->
+    <select id="findAccountByUid" resultType="com.wd.entity.Account">
+        select * from account where uid = #{uid}
+    </select>
+
+
+</mapper>
